@@ -22,7 +22,7 @@ test('current policy and proposed advertising update stay distinct', () => {
 });
 
 test('all policy pages are static and their local links resolve', () => {
-  for (const name of ['bugs-master.html', 'bugs-master-preview.html', 'bugs-master-20260903.html']) {
+  for (const name of ['bugs-master.html', 'bugs-master-preview.html', 'bugs-master-20260903.html', 'bugs-master-deletion.html']) {
     const pagePath = resolve(root, 'privacy', name);
     const html = readFileSync(pagePath, 'utf8');
     assert.doesNotMatch(html, /<(script|iframe|form)\b|\son\w+\s*=/i);
@@ -41,5 +41,26 @@ test('homepage retains existing game link and adds Bugs Master link', () => {
   const html = read('index.html');
   assert.match(html, /href="privacy\/whileclimbing.html"/);
   assert.match(html, /href="privacy\/bugs-master.html"/);
+  assert.match(html, /href="privacy\/bugs-master-deletion.html"/);
   assert.ok(existsSync(resolve(root, 'privacy/whileclimbing.html')));
+});
+
+test('deletion guide separates account, cloud save and local data', () => {
+  const html = read('privacy/bugs-master-deletion.html');
+  for (const id of ['account', 'game-data', 'local', 'retention', 'help']) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  assert.match(html, /계정은 유지하고 클라우드 게임 기록만 삭제/);
+  assert.match(html, /클라우드 기록 삭제/);
+  assert.match(html, /이 기기의 기록 삭제/);
+  assert.match(html, /Google 계정 전체를 삭제하는 기능이 아닙니다/);
+  assert.match(html, /최대 180일/);
+  assert.match(html, /수 주간/);
+  assert.match(html, /이메일 요청은 자동 삭제가 아닙니다/);
+  assert.match(html, /비밀번호, 인증번호, 신분증은 보내지 마세요/);
+  assert.match(html, /ming87@gmail.com/);
+  assert.doesNotMatch(html, /모든.*즉시.*영구 삭제/);
+  for (const [, href] of html.matchAll(/href="#([^"]+)"/g)) {
+    assert.match(html, new RegExp(`id="${href}"`));
+  }
 });
