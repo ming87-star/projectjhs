@@ -10,15 +10,20 @@ const current = read('privacy/bugs-master.html');
 const archive = read('privacy/bugs-master-20260903.html');
 const preview = read('privacy/bugs-master-preview.html');
 
-test('current policy and proposed advertising update stay distinct', () => {
-  assert.match(current, /시행일: 2026년 9월 3일/);
-  assert.match(current, /현재 공개 버전에 적용되는 방침/);
-  assert.match(current, /bugs-master-preview.html/);
+test('published advertising beta policy preserves the legacy policy and draft history', () => {
+  assert.match(current, /시행일: 2026년 9월 11일/);
+  assert.match(current, /광고 포함 Android 베타/);
+  assert.match(current, /bugs-master-20260903.html/);
+  assert.match(current, /테스트 광고도 Google 서버와 통신/);
+  assert.match(current, /맞춤 영양 보급 1개/);
+  assert.doesNotMatch(current, /아직 시행 전/);
   assert.match(preview, /아직 시행 전/);
   assert.match(preview, /bugs-master-20260903.html/);
   assert.match(preview, /만 14세 미만/);
   assert.match(preview, /ming87@gmail.com/);
-  assert.deepEqual(current.match(/<section>[\s\S]*?<\/section>/g), archive.match(/<section>[\s\S]*?<\/section>/g));
+  assert.match(archive, /시행일: 2026년 9월 3일/);
+  assert.match(archive, /광고·분석 SDK를 사용하지 않습니다/);
+  assert.match(preview, /게시된 베타 방침 보기/);
 });
 
 test('all policy pages are static and their local links resolve', () => {
