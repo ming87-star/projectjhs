@@ -21,6 +21,6 @@ test('the How to Wizard policy is a static page whose local links resolve', () =
 });
 
 test('the policy names every server feature and the index links to it', () => {
-  for (const words of [/Firebase/, /우물 메아리/, /주간 순위/, /오류 보고/, /Google Play 결제/, /광고가 없/]) assert.match(html, words);
+  for (const words of [/Firebase/, /우물 메아리/, /주간 순위/, /오류 보고/, /의견 보내기/, /Google Play 결제/, /광고가 없/]) assert.match(html, words);
   assert.match(readFileSync(resolve(root, 'index.html'), 'utf8'), /privacy\/how-to-wizard\.html/);
 });
